@@ -429,7 +429,7 @@ DEPENDENCIES
   slim (~> 5)
   sprockets-rails (~> 3)
   standard (~> 1)
-  tailwindcss-rails (~> 2)
+  tailwindcss-rails (~> 4)
   turbo-rails (~> 2)
   view_component!
   warning
