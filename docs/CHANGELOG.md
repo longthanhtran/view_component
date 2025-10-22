@@ -14,6 +14,12 @@ nav_order: 6
 
     *Tom Lord*
 
+## 4.0.2.rc1
+
+* Raise support to Rails 8.1.
+
+    *Long Tran*
+
 ## 4.0.2
 
 * Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.
