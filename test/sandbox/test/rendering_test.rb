@@ -20,7 +20,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"3.5" => 67, "3.4" => 74, "3.3" => 72, "3.2" => 75..76}) do
+      assert_allocations({"3.5" => 67, "3.4" => 72, "3.3" => 74, "3.2" => 75..76}) do
         render_inline(MyComponent.new)
       end
     end
@@ -34,7 +34,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(ProductComponent)
     ProductComponent.__vc_ensure_compiled
 
-    allocations = {"3.5" => 66, "3.4" => 82, "3.3" => 86, "3.2" => 89..90}
+    allocations = {"3.5" => 66, "3.4" => 70, "3.3" => 86, "3.2" => 89..90}
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
@@ -642,7 +642,7 @@ class RenderingTest < ViewComponent::TestCase
       end
 
     component_error_index = (Rails::VERSION::STRING < "8.0") ? 0 : 1
-    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace[component_error_index]
+    assert_match %r{app/components/exception_in_template_component\.html\.erb:3}, error.backtrace[component_error_index]
   end
 
   def test_render_collection

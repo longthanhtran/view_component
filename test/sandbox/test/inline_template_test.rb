@@ -104,7 +104,7 @@ class InlineErbTest < ViewComponent::TestCase
       render_inline(InlineRaiseErbComponent.new("Fox Mulder"))
     end
 
-    assert_match %r{test/sandbox/test/inline_template_test.rb:22}, error.backtrace[0]
+    assert_match %r{test/sandbox/test/inline_template_test.rb:23}, error.backtrace[0]
   end
 
   test "renders inline slim templates" do
