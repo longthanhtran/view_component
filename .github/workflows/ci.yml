@@ -16,16 +16,16 @@ jobs:
     env:
       BUNDLE_GEMFILE: gemfiles/rails_8.0.gemfile
     steps:
-    - uses: actions/checkout@v4.1.1
-    - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.4
-        bundler-cache: true
-    - name: Run benchmarks
-      run: |
-        bundle exec appraisal rails-8.0 rake partial_benchmark
-        bundle exec appraisal rails-8.0 rake translatable_benchmark
+      - uses: actions/checkout@v4.1.1
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4
+          bundler-cache: true
+      - name: Run benchmarks
+        run: |
+          bundle exec appraisal rails-8.0 rake partial_benchmark
+          bundle exec appraisal rails-8.0 rake translatable_benchmark
   test:
     name: test (Rails ${{ matrix.rails_version }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-latest
@@ -39,77 +39,79 @@ jobs:
             rails_version: "7.2"
           - ruby_version: "3.4"
             rails_version: "8.0"
+          - ruby_version: "3.4"
+            rails_version: "8.1"
           - ruby_version: "head"
             rails_version: "main"
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
     steps:
-    - uses: actions/checkout@v4.1.1
-    - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby_version }}
-        bundler-cache: true
-    - name: Build and test with Rake
-      run: |
-        bundle exec appraisal rails-${{ matrix.rails_version }} bundle --quiet
-        MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake all_tests
-      env:
-        RAISE_ON_WARNING: 1
-        RAILS_VERSION: ${{ matrix.rails_version }}
-        RUBY_VERSION: ${{ matrix.ruby_version }}
-    - name: Upload coverage results
-      uses: actions/upload-artifact@v4.4.0
-      if: always()
-      with:
-        name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}-${{matrix.mode}}
-        path: coverage
-        include-hidden-files: true
+      - uses: actions/checkout@v4.1.1
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby_version }}
+          bundler-cache: true
+      - name: Build and test with Rake
+        run: |
+          bundle exec appraisal rails-${{ matrix.rails_version }} bundle --quiet
+          MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake all_tests
+        env:
+          RAISE_ON_WARNING: 1
+          RAILS_VERSION: ${{ matrix.rails_version }}
+          RUBY_VERSION: ${{ matrix.ruby_version }}
+      - name: Upload coverage results
+        uses: actions/upload-artifact@v4.4.0
+        if: always()
+        with:
+          name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}-${{matrix.mode}}
+          path: coverage
+          include-hidden-files: true
   primer_view_components_compatibility:
     name: Test compatibility with Primer ViewComponents (main)
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4.1.1
-      with:
-        repository: 'primer/view_components'
-        path: 'primer_view_components'
-        ref: 'main'
-    - uses: actions/checkout@v4.1.1
-      with:
-        path: 'view_component'
-    - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.4
-        bundler-cache: true
-        working-directory: 'view_component'
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: 'npm'
-        cache-dependency-path: 'primer_view_components/package-lock.json'
-    - name: Build and test with Rake
-      run: |
-        cd primer_view_components
-        npm ci
-        cd demo && npm ci && cd ..
-        bundle --quiet && bundle exec rake
-      env:
-        VIEW_COMPONENT_PATH: ../view_component
-        RAILS_VERSION: '8.0.2'
-        PARALLEL_WORKERS: '1'
+      - uses: actions/checkout@v4.1.1
+        with:
+          repository: "primer/view_components"
+          path: "primer_view_components"
+          ref: "main"
+      - uses: actions/checkout@v4.1.1
+        with:
+          path: "view_component"
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4
+          bundler-cache: true
+          working-directory: "view_component"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: "primer_view_components/package-lock.json"
+      - name: Build and test with Rake
+        run: |
+          cd primer_view_components
+          npm ci
+          cd demo && npm ci && cd ..
+          bundle --quiet && bundle exec rake
+        env:
+          VIEW_COMPONENT_PATH: ../view_component
+          RAILS_VERSION: "8.0.2"
+          PARALLEL_WORKERS: "1"
   coverage:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4.1.1
-    - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.4
-        bundler-cache: true
-    - name: Download coverage results
-      uses: actions/download-artifact@v4.3.0
-    - name: Collate simplecov
-      run: |
-        bundle exec rake coverage:report
+      - uses: actions/checkout@v4.1.1
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4
+          bundler-cache: true
+      - name: Download coverage results
+        uses: actions/download-artifact@v4.3.0
+      - name: Collate simplecov
+        run: |
+          bundle exec rake coverage:report

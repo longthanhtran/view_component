@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 gemspec
 
-rails_version = (ENV["RAILS_VERSION"] || "~> 8").to_s
+rails_version = (ENV["RAILS_VERSION"] || "~> 8.1").to_s
 
 gem "rails", (rails_version == "main") ? {git: "https://github.com/rails/rails", ref: "main"} : rails_version
 
@@ -12,6 +12,7 @@ ruby ruby_version
 
 group :development, :test do
   gem "allocation_stats"
+  gem "appraisal-run", "~> 1.0"
   gem "appraisal", "~> 2"
   gem "benchmark-ips", "~> 2"
   gem "better_html"
